@@ -5,7 +5,7 @@ public class LaZone {
         try {
             DataBase db = new DataBase();
         } catch(Exception ex) {
-            es.printStackTrace();
+            ex.printStackTrace();
         }
     }
 }
