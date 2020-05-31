@@ -1,4 +1,4 @@
-package project;
+package chatroom;
 
 import java.io.*;
 import java.util.LinkedList;

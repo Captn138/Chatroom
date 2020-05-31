@@ -1,8 +1,9 @@
-package project;
+package client;
 
 import java.io.*;
 import java.net.*;
-import java.util.LinkedList; 
+import java.util.LinkedList;
+import chatroom.*;
 
 /**
  * A Client object is an object that will handle connections to the server, as well as sending and reading messages.

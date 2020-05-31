@@ -1,4 +1,4 @@
-package project;
+package chatroom;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

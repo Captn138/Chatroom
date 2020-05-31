@@ -1,8 +1,9 @@
-package project;
+package server;
 
 import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
+import chatroom.*;
 
 /**
  * A Server object is an object that will handle all the incoming connections from the clients as well as all the messages.
