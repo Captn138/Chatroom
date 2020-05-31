@@ -11,34 +11,41 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import chatroom.*;
+
 public class GUI implements ActionListener {
 	
-	private static JLabel LoginUserLabel;
-	private static JTextField LoginUserText;
-	private static JLabel LoginPasswordLabel;
-	private static JPasswordField LoginPasswordText;
 	
-	private static JLabel RegisterUserLabel;
-	private static JTextField RegisterUserText;
-	private static JLabel  RegisterPasswordLabel;
-	private static JPasswordField RegisterPasswordText;
-	private static JLabel RegisterConfirmLabel;
-	private static JPasswordField RegisterConfirmText;
+	/*JLabel, JTextField, JPasswordField and JButton we need in our GUI  */ 
+	private static JLabel LoginUserLabel; 						// In LoginGUI(), display "Username" on frame.
+	private static JTextField LoginUserText;					// In LoginGUI(), username textfield.
+	private static JLabel LoginPasswordLabel;					// In LoginGUI(), display "Password" on frame.
+	private static JPasswordField LoginPasswordText;			// In LoginGUI(), password textfield.
 	
-	private static JLabel ChatroomUsername;
-	private static JTextField ChatroomMessageText;
+	private static JLabel RegisterUserLabel;					// In RegisterGUI(), display "Username" on frame.
+	private static JTextField RegisterUserText;					// In RegisterGUI(), username textfield.
+	private static JLabel  RegisterPasswordLabel;				// In RegisterGUI(), display "Password" on frame.
+	private static JPasswordField RegisterPasswordText;			// In RegisterGUI(), password textfield.
+	private static JLabel RegisterConfirmLabel;					// In RegisterGUI(), display "Confirm" on frame.
+	private static JPasswordField RegisterConfirmText;			// In RegisterGUI(), password confirmation textfield.
 	
-	private static JButton LoginButton;
-	private static JButton RegisterButton;
-	private static JButton HomeLoginButton;
-	private static JButton HomeRegisterButton;
-	private static JButton SendButton;
+	private static JLabel ChatroomUsername;						// In ChatroomGUI(), display the current username on frame.
+	private static JTextField ChatroomSendMessageText;			// In ChatroomGUI(), message-to-send field.
+	private static JLabel ChatroomMessageLabel;					// In ChatroomGUI(), last received message.
 	
-	private static JButton BackButton;
+	private static JButton LoginButton;							// In LoginGUI(), button to login.
+	private static JButton RegisterButton;						// In RegisterGUI(), button to register.
+	private static JButton HomeLoginButton;						// In HomeGUI(), button to go to LoginGUI().
+	private static JButton HomeRegisterButton;					// In HomeGUI(), button to go to RegisterGUI().
+	private static JButton SendButton;							// In ChatroomGUI(), button to send message.
 	
-	private static JLabel LoginSuccess;
-	private static JLabel RegisterSuccess;
+	private static JButton BackButton;							// In LoginGUI() and Register(), button to go back to HomeGUI().
+	
+	private static JLabel LoginSuccess;							// In LoginGUI(), confirm or not if user successfully logged in.
+	private static JLabel RegisterSuccess;						// In RegisterGUI(), confirm or not if user sucessfully registered.
   
+	
+	/*The Login Window, accessible from HomeGUI()*/
 	private void LoginGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -82,6 +89,7 @@ public class GUI implements ActionListener {
 		
 	}
 	
+	/*The Home Window is public because this is the first one user will access. */
 	public void HomeGUI () {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -104,6 +112,7 @@ public class GUI implements ActionListener {
 		panel.add(HomeRegisterButton);
 	}
 	
+	/*The Register Window, accessible from HomeGUI() */
 	private void RegisterGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -156,6 +165,7 @@ public class GUI implements ActionListener {
 		
 	}
 	
+	/*The Chatroom Window, accessible from LoginGUI()*/
 	private void ChatroomGUI() {			
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -171,20 +181,27 @@ public class GUI implements ActionListener {
 		ChatroomUsername.setBounds(50,30,100,25);
 		panel.add(ChatroomUsername);
 		
-		ChatroomMessageText = new JTextField();
-		ChatroomMessageText.setBounds(50,500,180,25);
-		panel.add(ChatroomMessageText);
+		ChatroomSendMessageText = new JTextField();
+		ChatroomSendMessageText.setBounds(50,500,180,25);
+		panel.add(ChatroomSendMessageText);
 		
 		SendButton = new JButton("Send");
 		SendButton.setBounds(250,500,100,25);
 		SendButton.addActionListener(new GUI());
 		panel.add(SendButton);
+		
+		ChatroomMessageLabel = new JLabel("");
+		ChatroomMessageLabel.setBounds(50,400,180,25);
+		panel.add(ChatroomMessageLabel);
+		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		Object  source=e.getSource();
+		
+		Client c = new Client("localhost");
 			
 		if (source == HomeLoginButton) {
 			LoginGUI();	
@@ -205,17 +222,17 @@ public class GUI implements ActionListener {
 		String RegisterPassword = RegisterPasswordText.getText();
 		String RegisterConfirm = RegisterConfirmText.getText();
 		
-		String ChatroomMessage = ChatroomMessageText.getText();
+		String ChatroomMessage = ChatroomSendMessageText.getText();
 		
+		c.send(new Message(LoginUser, LoginPassword, 1));
+		Message m = c.getFirstElemFromList();
 		
-		Client.send(new Message(LoginUser, LoginPassword, 1));
-		
-		while (Message.type  != 3){
-			Client.delFirstElemFromList();
-			Message message = Client.getFirstElemFromList();
+		while (m.getType()  != 3 || m.getSender() != LoginUser){										// ERROR
+			c.delFirstElemFromList();
+			m = c.getFirstElemFromList();
 		}
 		
-		if(Message.content = true) {
+		if(m.getContent() == "yes") {											// ERROR
 			LoginSuccess.setText("Login Successful!");
 			ChatroomGUI();
 		}else if(LoginUser.equals("")||LoginPassword.equals("")){
@@ -224,11 +241,11 @@ public class GUI implements ActionListener {
 			LoginSuccess.setText("Username and password do not match.");
 		}	
 		
-		Client.send(new Message(RegisterUser, RegisterPassword, 5));
+		c.send(new Message(RegisterUser, RegisterPassword, 5));
 		
-		while (Message.type != 4){
-			Client.delFirstElemFromList();
-			Message message = Client.getFirstElemFromList();
+		while (m.getType() != 4 || m.getSender() != RegisterUser ){												// ERROR
+			c.delFirstElemFromList();
+			c.getFirstElemFromList();
 		}
 		
 		if(RegisterUser.equals("") || RegisterPassword.equals("") || RegisterConfirm.equals("")) {
@@ -237,7 +254,7 @@ public class GUI implements ActionListener {
 			RegisterSuccess.setText("Invalid character!");
 		}else if((RegisterPassword) != (RegisterConfirm)){
 			RegisterSuccess.setText("Please enter twice the same password.");
-		}else if (Message.content = false){
+		}else if (m.getContent() == "yes"){										// ERROR
 			RegisterSuccess.setText("This username already exists");
 		}else{
 			RegisterSuccess.setText("User registered");
@@ -245,10 +262,21 @@ public class GUI implements ActionListener {
 		}
 			
 		if (source == SendButton) {
-			Client.send(new Message(LoginUser, ChatroomMessage, 2));
-			ChatroomMessageText.setText("");
-		//TODO - PATCH "Cannot make a static reference to the non-static method/field
-		//TODO - DISPLAYING LAST TYPE 2 MESSAGES
+			c.send(new Message(LoginUser, ChatroomMessage, 2));
+			ChatroomSendMessageText.setText("");
+		}
+		
+		while (m.getType() != 2){
+			c.delFirstElemFromList();
+			m = c.getFirstElemFromList();
+		}
+		
+		if (m.getType() == 2) {
+				ChatroomMessageLabel.setText(m.getTime()+":"+m.getSender()+":"+m.getContent());
 		}
 	}	
 }
+
+
+//TODO throws IOException : WHERE ???
+//TODO add Refresh button
