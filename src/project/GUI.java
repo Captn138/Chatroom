@@ -24,6 +24,8 @@ public class GUI implements ActionListener {
 	private static JLabel RegisterConfirmLabel;
 	private static JPasswordField RegisterConfirmText;
 	
+	private static JLabel ChatroomUsername;
+	
 	private static JButton LoginButton;
 	private static JButton RegisterButton;
 	private static JButton HomeLoginButton;
@@ -31,13 +33,14 @@ public class GUI implements ActionListener {
 	
 	private static JButton BackButton;
 	
-	private static JLabel success;
+	private static JLabel LoginSuccess;
+	private static JLabel RegisterSuccess;
   
 	private void LoginGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
 		
-		frame.setSize(400, 200);
+		frame.setSize(400,300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.add(panel);
@@ -61,26 +64,26 @@ public class GUI implements ActionListener {
 		panel.add(LoginPasswordText);
 		
 		LoginButton = new JButton("Login");
-		LoginButton.setBounds(140, 120, 100, 25);
+		LoginButton.setBounds(140, 150, 100, 25);
 		LoginButton.addActionListener(new GUI());
 		panel.add(LoginButton);
 		
 		BackButton = new JButton("Back");
-		BackButton.setBounds(250,120,75,25);
+		BackButton.setBounds(250,150,75,25);
 		BackButton.addActionListener(new GUI());
 		panel.add(BackButton);
 		
-		success = new JLabel("");
+		LoginSuccess = new JLabel("");
+		LoginSuccess.setBounds(10, 80, 300, 25);
+		panel.add(LoginSuccess);
 		
-		success.setBounds(10, 80, 300, 25);
-		panel.add(success);
 	}
 	
 	public void HomeGUI () {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
 		
-		frame.setSize(400, 200);
+		frame.setSize(400,300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.add(panel);
@@ -104,7 +107,7 @@ public class GUI implements ActionListener {
 		
 		panel.setLayout(null);
 		
-		frame.setSize(400, 200);
+		frame.setSize(400,300);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setVisible(true);
 		frame.add(panel);
@@ -135,14 +138,38 @@ public class GUI implements ActionListener {
 		panel.add(RegisterConfirmText);
 		
 		RegisterButton = new JButton("Register");
-		RegisterButton.setBounds(140, 120, 100, 25);
+		RegisterButton.setBounds(140, 150, 100, 25);
 		RegisterButton.addActionListener(new GUI());
 		panel.add(RegisterButton);
 		
 		BackButton = new JButton("Back");
-		BackButton.setBounds(250,120,75,25);
+		BackButton.setBounds(250,150,75,25);
 		BackButton.addActionListener(new GUI());
-		panel.add(BackButton);
+		panel.add(BackButton);	
+		
+		RegisterSuccess = new JLabel("");
+		RegisterSuccess.setBounds(10,120,300,25);
+		panel.add(RegisterSuccess);
+		
+	}
+	
+	private void ChatroomGUI() {
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
+		
+		
+		panel.setLayout(null);
+		
+		frame.setSize(400, 800);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setVisible(true);
+		frame.add(panel);
+		
+		
+		ChatroomUsername = new JLabel(LoginUserText.getText()); 		
+		ChatroomUsername.setBounds(50,50,100,25);
+		panel.add(ChatroomUsername);
+		
 	}
 
 	@Override
@@ -151,7 +178,7 @@ public class GUI implements ActionListener {
 		Object  source=e.getSource();
 			
 		if (source == HomeLoginButton) {
-			LoginGUI();	// click HomeLoginButton
+			LoginGUI();	
 		}
 		
 		if (source == HomeRegisterButton) {
@@ -162,17 +189,29 @@ public class GUI implements ActionListener {
 			HomeGUI();
 		}
 		
-		String user = LoginUserText.getText();
-		String password = LoginPasswordText.getText();
+		String LoginUser = LoginUserText.getText();
+		String LoginPassword = LoginPasswordText.getText();
 		
-		if(user.equals("Hippo") && password.equals("oskour")){
-			success.setText("Login successful!");
-			
-		}else if(user.equals("")||password.equals("")){
-			success.setText("Please fill in all the fields.");
+		String RegisterUser = RegisterUserText.getText();
+		String RegisterPassword = RegisterPasswordText.getText();
+		String RegisterConfirm = RegisterConfirmText.getText();
+		
+		if(LoginUser.equals("Redsilver") && LoginPassword.equals("12345")){ // TODO CORRESPONDANCE DANS LA BASE DE DONNEES
+			LoginSuccess.setText("Login Successful!");
+			ChatroomGUI();	
+		}else if(LoginUser.equals("")||LoginPassword.equals("")){
+			LoginSuccess.setText("Please fill in all the fields.");
 			
 		}else{
-			success.setText("Username and password do not match.");
+			LoginSuccess.setText("Username and password do not match.");
 		}	
+		
+		if((RegisterPasswordText) != (RegisterConfirmText)){
+			RegisterSuccess.setText("Please enter twice the same password.");
+		}else{
+			RegisterSuccess.setText("");
+		}
+		//if TODO CHERCHER CORRESPONDANCE DANS LA BASE DE DONNEES
+			//RegisterSuccess.setText("This username already exists");
 	}	
 }
