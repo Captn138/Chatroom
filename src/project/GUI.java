@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,11 +26,13 @@ public class GUI implements ActionListener {
 	private static JPasswordField RegisterConfirmText;
 	
 	private static JLabel ChatroomUsername;
+	private static JTextField ChatroomMessageText;
 	
 	private static JButton LoginButton;
 	private static JButton RegisterButton;
 	private static JButton HomeLoginButton;
 	private static JButton HomeRegisterButton;
+	private static JButton SendButton;
 	
 	private static JButton BackButton;
 	
@@ -51,7 +54,7 @@ public class GUI implements ActionListener {
 		LoginUserLabel.setBounds(10, 20, 80, 25);
 		panel.add(LoginUserLabel);
 		
-		LoginUserText = new JTextField();
+		LoginUserText = new JFormattedTextField();
 		LoginUserText.setBounds(100, 20, 165, 25);
 		panel.add(LoginUserText);
 		
@@ -116,7 +119,7 @@ public class GUI implements ActionListener {
 		RegisterUserLabel.setBounds(40, 20, 80, 25);
 		panel.add(RegisterUserLabel);
 		
-		RegisterUserText = new JTextField();
+		RegisterUserText = new JFormattedTextField();
 		RegisterUserText.setBounds(100, 20, 165, 25);
 		panel.add(RegisterUserText);
 		
@@ -153,25 +156,31 @@ public class GUI implements ActionListener {
 		
 	}
 	
-	private void ChatroomGUI() {
+	private void ChatroomGUI() {			
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
 		
-		
 		panel.setLayout(null);
 		
-		frame.setSize(400, 800);
+		frame.setSize(400, 600);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setVisible(true);
 		frame.add(panel);
 		
-		
-		ChatroomUsername = new JLabel(LoginUserText.getText()); 		
-		ChatroomUsername.setBounds(50,50,100,25);
+		ChatroomUsername = new JLabel(LoginUserText.getText()); 	
+		ChatroomUsername.setBounds(50,30,100,25);
 		panel.add(ChatroomUsername);
 		
+		ChatroomMessageText = new JTextField();
+		ChatroomMessageText.setBounds(50,500,180,25);
+		panel.add(ChatroomMessageText);
+		
+		SendButton = new JButton("Send");
+		SendButton.setBounds(250,500,100,25);
+		SendButton.addActionListener(new GUI());
+		panel.add(SendButton);
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -196,22 +205,50 @@ public class GUI implements ActionListener {
 		String RegisterPassword = RegisterPasswordText.getText();
 		String RegisterConfirm = RegisterConfirmText.getText();
 		
-		if(LoginUser.equals("Redsilver") && LoginPassword.equals("12345")){ // TODO CORRESPONDANCE DANS LA BASE DE DONNEES
+		String ChatroomMessage = ChatroomMessageText.getText();
+		
+		
+		Client.send(new Message(LoginUser, LoginPassword, 1));
+		
+		while (Message.type  != 3){
+			Client.delFirstElemFromList();
+			Message message = Client.getFirstElemFromList();
+		}
+		
+		if(Message.content = true) {
 			LoginSuccess.setText("Login Successful!");
-			ChatroomGUI();	
+			ChatroomGUI();
 		}else if(LoginUser.equals("")||LoginPassword.equals("")){
 			LoginSuccess.setText("Please fill in all the fields.");
-			
 		}else{
 			LoginSuccess.setText("Username and password do not match.");
 		}	
 		
-		if((RegisterPasswordText) != (RegisterConfirmText)){
-			RegisterSuccess.setText("Please enter twice the same password.");
-		}else{
-			RegisterSuccess.setText("");
+		Client.send(new Message(RegisterUser, RegisterPassword, 5));
+		
+		while (Message.type != 4){
+			Client.delFirstElemFromList();
+			Message message = Client.getFirstElemFromList();
 		}
-		//if TODO CHERCHER CORRESPONDANCE DANS LA BASE DE DONNEES
-			//RegisterSuccess.setText("This username already exists");
+		
+		if(RegisterUser.equals("") || RegisterPassword.equals("") || RegisterConfirm.equals("")) {
+			RegisterSuccess.setText("Please fill in all the fields.");
+		}else if(RegisterUser.contains("|") ==  true || RegisterPassword.contains("|") ==  true || RegisterConfirm.contains("|") ==  true) {
+			RegisterSuccess.setText("Invalid character!");
+		}else if((RegisterPassword) != (RegisterConfirm)){
+			RegisterSuccess.setText("Please enter twice the same password.");
+		}else if (Message.content = false){
+			RegisterSuccess.setText("This username already exists");
+		}else{
+			RegisterSuccess.setText("User registered");
+			LoginGUI();
+		}
+			
+		if (source == SendButton) {
+			Client.send(new Message(LoginUser, ChatroomMessage, 2));
+			ChatroomMessageText.setText("");
+		//TODO - PATCH "Cannot make a static reference to the non-static method/field
+		//TODO - DISPLAYING LAST TYPE 2 MESSAGES
+		}
 	}	
 }
