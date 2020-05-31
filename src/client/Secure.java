@@ -1,4 +1,4 @@
-package chatroom;
+package client;
 
 import java.math.BigInteger;
 import java.security.*;
