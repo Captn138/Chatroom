@@ -1,6 +1,6 @@
 package project;
 
-public class Test {
+public class TestClient {
     public static void main(String[] args) {
         //new Client("localhost");
         Secure secure = new Secure();
