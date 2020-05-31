@@ -21,7 +21,7 @@ public class Server {
 	private Socket socket;
 	private Sender sender;
 	private Reciever reciever;
-	private final int port = 6666;
+	private int port = 6666;
 	private LinkedList<Message> list;
 	
 	/**
@@ -48,12 +48,12 @@ public class Server {
 			reciever = new Reciever(input, output, list);
 			sender.start();
 			reciever.start();
-		}catch(final IOException ioe){
+		}catch(IOException ioe){
 			ioe.printStackTrace();
 			if(ss != null && !ss.isClosed()){
 				try{
 					ss.close();
-				}catch(final IOException e){
+				}catch(IOException e){
 					e.printStackTrace(System.err);
 				}
 			}
@@ -71,8 +71,8 @@ public class Server {
 		while(true){
 			try{
 				if(list.size() > 0){
-					final Message msg = list.get(0);
-					final int type = msg.getType();
+					Message msg = list.get(0);
+					int type = msg.getType();
 					if(type == 1){
 						if(connexion(msg) == true){
 							sender.send(new Message(msg.getSender(), "yes", 3));
@@ -90,7 +90,7 @@ public class Server {
 					}
 					list.remove(0);
 				}
-			}catch(final Exception ex){
+			}catch(Exception ex){
 				ex.printStackTrace();
 			}
 		}
@@ -102,7 +102,7 @@ public class Server {
 	 * @param msg (Message) : the connection request message containing the username and the password hash
 	 * @return boolean
 	 */
-	private boolean connexion(final Message msg){
+	private boolean connexion(Message msg){
 		//if username and password are in the users database
 		return true;
 		//else return false
@@ -114,7 +114,7 @@ public class Server {
 	 * @param msg (Message) : the register request message containing the username and the password hash
 	 * @return boolean
 	 */
-	private boolean register(final Message msg){
+	private boolean register(Message msg){
 		//if username not taken
 		return true;
 		//else return false
@@ -126,13 +126,13 @@ public class Server {
 	 * @param msg (Message) : the message to save
 	 * @throws IOException
 	 */
-	private void saveMessage(final Message msg) throws IOException {
+	private void saveMessage(Message msg) throws IOException {
 		sender.send(msg);
 		//save message in the messages database
 	}
 
-	public static void main (final String[] args) {
-		final Server serv = new Server();
+	public static void main (String[] args) {
+		Server serv = new Server();
 		serv.run();
 	}
 }
