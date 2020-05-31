@@ -12,6 +12,7 @@ import chatroom.*;
  * @see Reciever
  * @see Message
  * @see ThreadTemplate
+ * @see Secure
  */
 public class Client {
 	
@@ -22,6 +23,7 @@ public class Client {
 	private Reciever reciever;
 	private int port = 6666;
 	private LinkedList<Message> list;
+	private Secure s;
 	
 
 	/**
@@ -32,6 +34,7 @@ public class Client {
 	 * @See threadTemplate
 	 */
 	public Client(String ip) {
+		s = new Secure();
         try  {
 			list = new LinkedList<Message>();
 
@@ -95,5 +98,15 @@ public class Client {
 	 */
 	public void send(Message msg) throws IOException {
 		sender.send(msg);
+	}
+
+	/**
+	 * Calls the method hash(pwd) from Secure to hash a password.
+	 * @param pwd (String) : the password to hash
+	 * @return String
+	 * @see Secure
+	 */
+	public String hash(String pwd){
+		return s.hash(pwd);
 	}
 }
