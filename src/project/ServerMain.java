@@ -1,6 +1,6 @@
 package project;
 
-public class TestServer {
+public class ServerMain {
 
 	public static void main (String[] args) {
 		Server serv = new Server();

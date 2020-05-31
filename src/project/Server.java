@@ -4,6 +4,14 @@ import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
 
+/**
+ * A Server object is an object that will handle all the incoming connections from the clients as well as all the messages.
+ * @author Groupe Télétravail, Famine, Pâtes-Riz : ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
+ * @see Sender
+ * @see Reciever
+ * @see ThreadTemplate
+ * @see Message
+ */
 public class Server {
 
 	private ObjectOutputStream output;
@@ -15,6 +23,12 @@ public class Server {
 	private int port = 6666;
 	private LinkedList<Message> list;
 	
+	/**
+	 * Creates the socket, searches for the input and output stream, creates the sender and reciever threads and starts them.
+	 * @see Sender
+	 * @see Reciever
+	 * @see ThreadTemplate
+	 */
 	public Server() {
 		try{
 			list = new LinkedList<Message>();
@@ -45,6 +59,13 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Main processing function of the server. Searches for the messages recieved and processes them following their type.
+	 * @see Message
+	 * @see Sender
+	 * @see Reciever
+	 * @see ThreadTemplate
+	 */
 	public void run(){
 		while(true){
 			try{
@@ -53,17 +74,17 @@ public class Server {
 					int type = msg.getType();
 					if(type == 1){
 						if(connexion(msg) == true){
-							sender.send(new Message("server", msg.getSender() + "|" + "yes", 3));
+							sender.send(new Message(msg.getSender(), "yes", 3));
 						}else{
-							sender.send(new Message("server", msg.getSender() + "|" + "no", 3));
+							sender.send(new Message(msg.getSender(), "no", 3));
 						}
 					}else if(type == 2){
 						saveMessage(msg);
 					}else if(type == 5){
 						if(register(msg) == true){
-							sender.send(new Message("server", msg.getSender() + "|" + "yes", 4));
+							sender.send(new Message(msg.getSender(), "yes", 4));
 						}else{
-							sender.send(new Message("server", msg.getSender() + "|" + "no", 4));
+							sender.send(new Message(msg.getSender(), "no", 4));
 						}
 					}
 					list.remove(0);
@@ -74,18 +95,36 @@ public class Server {
 		}
 	}
 
+	
+	/** 
+	 * Checks if the couple username/password hash is in the database and returns true or false if not.
+	 * @param msg (Message) : the connection request message containing the username and the password hash
+	 * @return boolean
+	 */
 	private boolean connexion(Message msg){
 		//if username and password are in the users database
 		return true;
 		//else return false
 	}
 
+	
+	/** 
+	 * Checks if the requested username is not in the database yet, then saves the new user and returns true or returns false if not.
+	 * @param msg (Message) : the register request message containing the username and the password hash
+	 * @return boolean
+	 */
 	private boolean register(Message msg){
 		//if username not taken
 		return true;
 		//else return false
 	}
 
+	
+	/** 
+	 * Saves a message in the messages database and send it to everyone
+	 * @param msg (Message) : the message to save
+	 * @throws IOException
+	 */
 	private void saveMessage(Message msg) throws IOException {
 		sender.send(msg);
 		//save message in the messages database

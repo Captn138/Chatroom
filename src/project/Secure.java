@@ -3,7 +3,17 @@ package project;
 import java.math.BigInteger;
 import java.security.*;
 
+/**
+ * A Secure object is used to hash passwords, using the SHA-512 algorithm.
+ * @author Groupe Télétravail, Famine, Pâtes-Riz : ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
+ */
 public class Secure {
+    
+    /** 
+     * Hashes the password, then restitues the hash as a String object.
+     * @param pwd (String) : the password to be hashed
+     * @return String
+     */
     public String hash(String pwd) {
         MessageDigest md;
         String hashtext = "";
@@ -21,6 +31,3 @@ public class Secure {
         return hashtext;
     }
 }
-
-
-//https://www.geeksforgeeks.org/sha-512-hash-in-java/
