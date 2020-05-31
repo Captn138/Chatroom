@@ -1,8 +1,0 @@
-pour jeudi 14 mai:
-• Gantt: brainstorming, web-server-client, database, messages, gui, tests, reapport
-• User et system requirements / how to produce requirememnts lists (looking at different chatrooms, brainstormings ...)
-• Premiers UML : Facade, web, database, gui, messages (/!\ deux applications : client envoie données, serveur reçoit et écrit dans la database! PAS DE DB POUR LE CLIENT /!\)
-
-
-
-https://app.diagrams.net/
