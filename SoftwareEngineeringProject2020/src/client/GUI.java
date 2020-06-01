@@ -22,7 +22,7 @@ import chatroom.*;
  * back to HomeGUI(). Once the user is logged in, the ChatroomGUI() appears
  * which is the place they can discuss with other users.
  * 
- * @author Groupe Télétravail, Famine, Pâtes-Riz : ALMEIDA Mickael, BERNARD
+ * @author Groupe TÃ©lÃ©travail, Famine, Pates-Riz : ALMEIDA Mickael, BERNARD
  *         Hippolyte, DRAY Gabriel
  */
 
