@@ -220,6 +220,10 @@ public class GUI implements ActionListener {
 		panel.add(ChatroomMessageLabel);
 
 	}
+	/**
+	 * Change GUI appearance when user clicks on buttons
+	 * @param e (ActionEvent) : button clicked by the user
+	 */
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -228,7 +232,7 @@ public class GUI implements ActionListener {
 
 		Client c = new Client("localhost");
 
-		/**
+		/*
 		 * In HomeGUI(), give access to LoginGUI() if user clicks "Login" Button
 		 */
 
@@ -236,7 +240,7 @@ public class GUI implements ActionListener {
 			LoginGUI();
 		}
 
-		/**
+		/*
 		 * In HomeGUI(), give access to RegisterGUI() if user clicks "Register" Button
 		 */
 
@@ -244,7 +248,7 @@ public class GUI implements ActionListener {
 			RegisterGUI();
 		}
 
-		/**
+		/*
 		 * In RegisterGUI() and LoginGUI(), return to HomeGUI() if user clicks "Back"
 		 * Button
 		 */
@@ -254,19 +258,15 @@ public class GUI implements ActionListener {
 		}
 
 		String LoginUser = LoginUserText.getText();
-		String LoginPassword = LoginPasswordText.getText();
-
-		/**
-		 * @deprecated
-		 */
+		String LoginPassword = LoginPasswordText.getSelectedText();
 
 		String RegisterUser = RegisterUserText.getText();
-		String RegisterPassword = RegisterPasswordText.getText();
-		String RegisterConfirm = RegisterConfirmText.getText();
+		String RegisterPassword = RegisterPasswordText.getSelectedText();
+		String RegisterConfirm = RegisterConfirmText.getSelectedText();
 
 		String ChatroomMessage = ChatroomSendMessageText.getText();
 
-		/**
+		/*
 		 * User makes a Login request
 		 */
 
@@ -277,7 +277,7 @@ public class GUI implements ActionListener {
 		}
 		Message m = c.getFirstElemFromList();
 		
-		/**
+		/*
 		 * As soon as we don't receive a confirmation message (Type 3) or the corresponding Username
 		 * We delete first Message and we try to get the next one
 		 */
@@ -287,7 +287,7 @@ public class GUI implements ActionListener {
 			m = c.getFirstElemFromList();
 		}
 		
-		/**
+		/*
 		 * Content Interpretation
 		 */
 		
@@ -300,7 +300,7 @@ public class GUI implements ActionListener {
 			LoginSuccess.setText("Username and password do not match.");
 		}	
 		
-		/**
+		/*
 		 * User makes a Register request
 		 */
 		
@@ -315,7 +315,7 @@ public class GUI implements ActionListener {
 			c.getFirstElemFromList();
 		}
 		
-		/**
+		/*
 		 * Content Interpretation
 		 */
 		
@@ -332,7 +332,7 @@ public class GUI implements ActionListener {
 			LoginGUI();
 		}
 		
-		/**
+		/*
 		 * Send a Type 2 message and clear the TextField so the user can type a new one
 		 */
 		
@@ -346,7 +346,7 @@ public class GUI implements ActionListener {
 		}
 		
 		
-		/**
+		/*
 		 * We check if the first element of the list is a message to show to the user (Type 2)
 		 */
 		
@@ -355,7 +355,7 @@ public class GUI implements ActionListener {
 			m = c.getFirstElemFromList();
 		}
 		
-		/**
+		/*
 		 * Message appears to user under this form : "xx:xx" (time) - xxxxxx (sender) : xx xxxx xxxxxx (message).
 		 */
 		
