@@ -13,6 +13,14 @@ import javax.swing.JTextField;
 
 import chatroom.*;
 
+
+/**
+ * A GUI object is the Window that will appear to the user. The GUI starts  with the HomeGUI(), where the user can choose to either Login or Register.
+ * A new GUI will appear depending on where they clicked, LoginGUI() or RegisterGUI(). If they correctly registered, they will be able to Login.
+ * They can always go back to HomeGUI().  Once the user is logged in, the ChatroomGUI() appears which is the place they can discuss with other users.
+ * @author Groupe Télétravail, Famine, Pâtes-Riz : ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
+ */
+
 public class GUI implements ActionListener {
 	
 	
@@ -45,7 +53,11 @@ public class GUI implements ActionListener {
 	private static JLabel RegisterSuccess;						// In RegisterGUI(), confirm or not if user sucessfully registered.
   
 	
-	/*The Login Window, accessible from HomeGUI()*/
+	/**
+	 * The Login Window. 
+	 * LoginGUI() is accessible from HomeGUI() and can give access to ChatroomGUI() and HomeGUI().
+	 * It contains 2 TextFields, 3 Labels, 2 Buttons with ActionListener
+	 */
 	private void LoginGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -89,7 +101,11 @@ public class GUI implements ActionListener {
 		
 	}
 	
-	/*The Home Window is public because this is the first one user will access. */
+	/**
+	 *  The Home Window. 
+	 *  HomeGUI() is accessible by starting the application and by LoginGUI() and RegisterGUI() and can give access to LoginGUI() and RegisterGUI().
+	 *  It contains 2 Buttons with ActionListener
+	 */
 	public void HomeGUI () {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -112,7 +128,11 @@ public class GUI implements ActionListener {
 		panel.add(HomeRegisterButton);
 	}
 	
-	/*The Register Window, accessible from HomeGUI() */
+	/**
+	 * 	The Register Window.
+	 *  RegisterGUI() accessible from HomeGUI() and can give access to HomeGUI()
+	 *  It contains 3 TextFields, 4 Labels and 2 Buttons with ActionListener
+	 */
 	private void RegisterGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -165,7 +185,11 @@ public class GUI implements ActionListener {
 		
 	}
 	
-	/*The Chatroom Window, accessible from LoginGUI()*/
+	/**	
+	 * 	The Chatroom Window
+	 * 	ChatroomGUI() is accessible from LoginGUI()
+	 * 	It contains 2 Labels, 1 Textfield and 1 Button with ActionListener
+	 */
 	private void ChatroomGUI() {			
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -203,13 +227,25 @@ public class GUI implements ActionListener {
 		
 		Client c = new Client("localhost");
 			
+		/** 
+		 * In HomeGUI(), give access to LoginGUI() if user clicks "Login" Button
+		 */
+		
 		if (source == HomeLoginButton) {
 			LoginGUI();	
 		}
 		
+		/**
+		 * In HomeGUI(), give access to RegisterGUI() if user clicks "Register" Button
+		 */
+		
 		if (source == HomeRegisterButton) {
 			RegisterGUI();
 		}
+		
+		/**
+		 * In RegisterGUI() and LoginGUI(), return to HomeGUI() if user clicks "Back" Button 
+		 */
 		
 		if (source == BackButton) {
 			HomeGUI();
@@ -218,21 +254,40 @@ public class GUI implements ActionListener {
 		String LoginUser = LoginUserText.getText();
 		String LoginPassword = LoginPasswordText.getText();
 		
+		
+		/**
+		 * @deprecated 
+		 */
+		
 		String RegisterUser = RegisterUserText.getText();
 		String RegisterPassword = RegisterPasswordText.getText();
 		String RegisterConfirm = RegisterConfirmText.getText();
 		
 		String ChatroomMessage = ChatroomSendMessageText.getText();
 		
+		
+		/**
+		 * User makes a Login request
+		 */
+		
 		c.send(new Message(LoginUser, LoginPassword, 1));
 		Message m = c.getFirstElemFromList();
 		
-		while (m.getType()  != 3 || m.getSender() != LoginUser){										// ERROR
+		/**
+		 * As soon as we don't receive a confirmation message (Type 3) or the corresponding Username
+		 * We delete first Message and we try to get the next one
+		 */
+		
+		while (m.getType()  != 3 || m.getSender() != LoginUser){									
 			c.delFirstElemFromList();
 			m = c.getFirstElemFromList();
 		}
 		
-		if(m.getContent() == "yes") {											// ERROR
+		/**
+		 * Content Interpretation
+		 */
+		
+		if(m.getContent() == "yes") {											
 			LoginSuccess.setText("Login Successful!");
 			ChatroomGUI();
 		}else if(LoginUser.equals("")||LoginPassword.equals("")){
@@ -241,12 +296,20 @@ public class GUI implements ActionListener {
 			LoginSuccess.setText("Username and password do not match.");
 		}	
 		
+		/**
+		 * User makes a Register request
+		 */
+		
 		c.send(new Message(RegisterUser, RegisterPassword, 5));
 		
-		while (m.getType() != 4 || m.getSender() != RegisterUser ){												// ERROR
+		while (m.getType() != 4 || m.getSender() != RegisterUser ){												
 			c.delFirstElemFromList();
 			c.getFirstElemFromList();
 		}
+		
+		/**
+		 * Content Interpretation
+		 */
 		
 		if(RegisterUser.equals("") || RegisterPassword.equals("") || RegisterConfirm.equals("")) {
 			RegisterSuccess.setText("Please fill in all the fields.");
@@ -254,29 +317,42 @@ public class GUI implements ActionListener {
 			RegisterSuccess.setText("Invalid character!");
 		}else if((RegisterPassword) != (RegisterConfirm)){
 			RegisterSuccess.setText("Please enter twice the same password.");
-		}else if (m.getContent() == "yes"){										// ERROR
+		}else if (m.getContent() == "yes"){										
 			RegisterSuccess.setText("This username already exists");
 		}else{
 			RegisterSuccess.setText("User registered");
 			LoginGUI();
 		}
-			
+		
+		/**
+		 * Send a Type 2 message and clear the TextField so the user can type a new one
+		 */
+		
 		if (source == SendButton) {
 			c.send(new Message(LoginUser, ChatroomMessage, 2));
 			ChatroomSendMessageText.setText("");
 		}
+		
+		
+		/**
+		 * We check if the first element of the list is a message to show to the user (Type 2)
+		 */
 		
 		while (m.getType() != 2){
 			c.delFirstElemFromList();
 			m = c.getFirstElemFromList();
 		}
 		
+		/**
+		 * Message appears to user under this form : "xx:xx" (time) - xxxxxx (sender) : xx xxxx xxxxxx (message).
+		 */
+		
 		if (m.getType() == 2) {
-				ChatroomMessageLabel.setText(m.getTime()+":"+m.getSender()+":"+m.getContent());
+				ChatroomMessageLabel.setText(m.getTime()+"-"+m.getSender()+":"+m.getContent());
 		}
 	}	
 }
 
 
 //TODO throws IOException : WHERE ???
-//TODO add Refresh button
+//TODO Show Previous Type 2 Message
