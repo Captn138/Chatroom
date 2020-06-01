@@ -55,12 +55,17 @@ public class GUI implements ActionListener {
 
 	private static JLabel LoginSuccess; // In LoginGUI(), confirm or not if user successfully logged in.
 	private static JLabel RegisterSuccess; // In RegisterGUI(), confirm or not if user sucessfully registered.
+	
+	public static void main(String[] args) {
+	    new GUI();
 
 	/**
 	 * The Login Window. LoginGUI() is accessible from HomeGUI() and can give access
 	 * to ChatroomGUI() and HomeGUI(). It contains 2 TextFields, 3 Labels, 2 Buttons
 	 * with ActionListener
 	 */
+	
+	}
 	private void LoginGUI() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
