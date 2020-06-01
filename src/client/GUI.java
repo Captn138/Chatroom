@@ -52,6 +52,7 @@ public class GUI implements ActionListener {
 	private static JButton SendButton; // In ChatroomGUI(), button to send message.
 
 	private static JButton BackButton; // In LoginGUI() and Register(), button to go back to HomeGUI().
+	private static JButton RefreshButton;
 
 	private static JLabel LoginSuccess; // In LoginGUI(), confirm or not if user successfully logged in.
 	private static JLabel RegisterSuccess; // In RegisterGUI(), confirm or not if user sucessfully registered.
@@ -224,6 +225,11 @@ public class GUI implements ActionListener {
 		ChatroomMessageLabel = new JLabel("");
 		ChatroomMessageLabel.setBounds(50, 400, 180, 25);
 		panel.add(ChatroomMessageLabel);
+		
+		RefreshButton = new JButton("Refresh");
+		RefreshButton.setBounds(250,30,100,25);
+		RefreshButton.addActionListener(new GUI());
+		panel.add(RefreshButton);
 
 	}
 	/**
@@ -276,66 +282,71 @@ public class GUI implements ActionListener {
 		 * User makes a Login request
 		 */
 
-		try {
-			c.send(new Message(LoginUser, LoginPassword, 1));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		Message m = c.getFirstElemFromList();
+		if (source == RegisterButton) {
+			try {
+				c.send(new Message(LoginUser, LoginPassword, 1));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			Message m = c.getFirstElemFromList();
 		
 		/*
 		 * As soon as we don't receive a confirmation message (Type 3) or the corresponding Username
 		 * We delete first Message and we try to get the next one
 		 */
 		
-		while (m.getType()  != 3 || m.getSender() != LoginUser){									
-			c.delFirstElemFromList();
-			m = c.getFirstElemFromList();
-		}
+			while (m.getType()  != 3 || m.getSender() != LoginUser){									
+				c.delFirstElemFromList();
+				m = c.getFirstElemFromList();
+			}
 		
 		/*
 		 * Content Interpretation
 		 */
 		
-		if(m.getContent() == "yes") {											
-			LoginSuccess.setText("Login Successful!");
-			ChatroomGUI();
-		}else if(LoginUser.equals("")||LoginPassword.equals("")){
-			LoginSuccess.setText("Please fill in all the fields.");
-		}else{
-			LoginSuccess.setText("Username and password do not match.");
-		}	
-		
+			if(m.getContent() == "yes") {											
+				LoginSuccess.setText("Login Successful!");
+				ChatroomGUI();
+			}else if(LoginUser.equals("")||LoginPassword.equals("")){
+				LoginSuccess.setText("Please fill in all the fields.");
+			}else{
+				LoginSuccess.setText("Username and password do not match.");
+			}	
+		}
 		/*
 		 * User makes a Register request
 		 */
 		
-		try {
-			c.send(new Message(RegisterUser, RegisterPassword, 5));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		if (source == RegisterButton){
+			try {
+				c.send(new Message(RegisterUser, RegisterPassword, 5));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			Message m = c.getFirstElemFromList();
 		
-		while (m.getType() != 4 || m.getSender() != RegisterUser ){												
-			c.delFirstElemFromList();
-			c.getFirstElemFromList();
-		}
+			while (m.getType() != 4 || m.getSender() != RegisterUser ){												
+				c.delFirstElemFromList();
+				c.getFirstElemFromList();
+			}
 		
 		/*
 		 * Content Interpretation
 		 */
 		
-		if(RegisterUser.equals("") || RegisterPassword.equals("") || RegisterConfirm.equals("")) {
-			RegisterSuccess.setText("Please fill in all the fields.");
-		}else if(RegisterUser.contains("|") ==  true || RegisterPassword.contains("|") ==  true || RegisterConfirm.contains("|") ==  true) {
-			RegisterSuccess.setText("Invalid character!");
-		}else if((RegisterPassword) != (RegisterConfirm)){
-			RegisterSuccess.setText("Please enter twice the same password.");
-		}else if (m.getContent() == "yes"){										
-			RegisterSuccess.setText("This username already exists");
-		}else{
-			RegisterSuccess.setText("User registered");
-			LoginGUI();
+		
+			if(RegisterUser.equals("") || RegisterPassword.equals("") || RegisterConfirm.equals("")) {
+				RegisterSuccess.setText("Please fill in all the fields.");
+			}else if(RegisterUser.contains("|") ==  true || RegisterPassword.contains("|") ==  true || RegisterConfirm.contains("|") ==  true) {
+				RegisterSuccess.setText("Invalid character!");
+			}else if((RegisterPassword) != (RegisterConfirm)){
+				RegisterSuccess.setText("Please enter twice the same password.");
+			}else if (m.getContent() == "yes"){										
+				RegisterSuccess.setText("This username already exists");
+			}else{
+				RegisterSuccess.setText("User registered");
+				LoginGUI();
+			}
 		}
 		
 		/*
@@ -356,17 +367,20 @@ public class GUI implements ActionListener {
 		 * We check if the first element of the list is a message to show to the user (Type 2)
 		 */
 		
-		while (m.getType() != 2){
-			c.delFirstElemFromList();
-			m = c.getFirstElemFromList();
-		}
+		if (source == RefreshButton) {
+			Message m = c.getFirstElemFromList();
+			while (m.getType() != 2){
+				c.delFirstElemFromList();
+				m = c.getFirstElemFromList();
+			}
 		
 		/*
 		 * Message appears to user under this form : "xx:xx" (time) - xxxxxx (sender) : xx xxxx xxxxxx (message).
 		 */
 		
-		if (m.getType() == 2) {
+			if (m.getType() == 2) {
 				ChatroomMessageLabel.setText(m.getTime()+"-"+m.getSender()+":"+m.getContent());
+			}
 		}
 	}	
 }
