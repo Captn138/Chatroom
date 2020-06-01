@@ -18,7 +18,7 @@ import chatroom.*;
  * A GUI object is the Window that will appear to the user. The GUI starts  with the HomeGUI(), where the user can choose to either Login or Register.
  * A new GUI will appear depending on where they clicked, LoginGUI() or RegisterGUI(). If they correctly registered, they will be able to Login.
  * They can always go back to HomeGUI().  Once the user is logged in, the ChatroomGUI() appears which is the place they can discuss with other users.
- * @author Groupe Télétravail, Famine, Pâtes-Riz : ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
+ * @author Groupe TÃ©lÃ©travail, Famine, PÃ¢tes-Riz : ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
  */
 
 public class GUI implements ActionListener {
@@ -352,7 +352,3 @@ public class GUI implements ActionListener {
 		}
 	}	
 }
-
-
-//TODO throws IOException : WHERE ???
-//TODO Show Previous Type 2 Message
