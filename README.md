@@ -1,4 +1,5 @@
 # Software Engineering Project
+Software Engineering Project - 3A-S2 (2020)
 ## Team Télétravail, Famine, Pâtes-Riz:
 ### ALMEIDA Mickael, BERNARD Hippolyte, DRAY Gabriel
 
